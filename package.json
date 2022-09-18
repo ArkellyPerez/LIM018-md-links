@@ -3,5 +3,12 @@
   "version": "0.1.0",
   "engines": {
     "node": ">=16.x"
-  }
+  },
+  "devDependencies": {
+    "jest": "^29.0.2"
+  },
+     "scripts": {
+      "test": "jest"
+    }
+  
 }
