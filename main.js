@@ -1,36 +1,11 @@
 const { existsSync, readFileSync, readFile } = require('fs');
 const path = require('path');
+const fetch = require('node-fetch');
 //import {  mdLinks } from 'main.js';
 //const mdLinks = require("main.js").mdLinks;
 //const cosa = require("main.js").cosa;
-mdLinks();
-// function validarRutaAbsoluta(ruta) {
+mdLinks('./pruebamd.md');
 
-//     const absolutePath = path.join(__dirname, ruta);//obtenemos la ruta absoluta- __dirname nos da el directorio donde nos encontramos
-//     const pathExtension = path.extname(absolutePath);// obtenemos la extencion del archivo
-//     console.log(pathExtension, 'The path si existsdd.', absolutePath);
-//     console.log('The path existsynk', existsSync(absolutePath));
-
-//     if (existsSync(absolutePath)) {//recibe una ruta que puede ser una string, un búfer o una URL- retorna una booleano si existe la ruta o no
-//         const objValidarRuta = {
-//             rutaAbsoluta: absolutePath,
-//             flagRutaValida: 1
-//         };
-
-//         console.log('The path exists. extencion', objValidarRuta);
-//         return (objValidarRuta);
-//     }
-//     else {
-//         console.log('The path no existsdd.');
-//         const objValidarRuta = {
-//             rutaAbsoluta: '',
-//             flagRutaValida: 0
-//         };
-//         return (objValidarRuta);
-//     }
-
-
-// }
 function tipoRutafuncion(route) {
     const routeisAbsolute = path.isAbsolute(route);
     console.log(" ruta es absoluta..", routeisAbsolute);
@@ -50,27 +25,112 @@ function fileExtencion(routeAbsolute1) {
     } else {
         isFileMd = false;
     }
+    console.log(" extencion.. final", isFileMd)
     return (isFileMd);
 }
 
+function readFiles(routeAbsolute1) { // funcion para leer archivos
+    const arrayLinks = [];
+    if (routeAbsolute1 !== '') {
+        const fileContent = readFileSync(routeAbsolute1, "utf-8");
+        const arrayRoutesLinks = fileContent.match(/\[.*\]\(.*\)/g);// guardamos cada link en la constante arrayLinks
 
-function mdLinks() {
-    const routeAbsolute = './pruebamd.md';
-    const routeisAbsolute = tipoRutafuncion('pruebamd.md');//retorna un booleando 
-    if (existsSync(routeAbsolute)) {//recibe una ruta que puede ser una string, un búfer o una URL- retorna una booleano si existe la ruta o no
+        if (routeAbsolute1 !== '') {
+            arrayRoutesLinks.map((url) => {
+                const text = url.slice(1, url.indexOf(']'));
+                const href = url.slice(url.indexOf(']') + 2, url.indexOf(')'));
+                const routeF = __dirname + routeAbsolute1;
+                const objectLinks = {
+                    href,
+                    text,
+                    routeF,
+                }
+                arrayLinks.push(objectLinks);
+            });
+
+            // console.log(arrayLinks);
+            return arrayLinks;
+        }
+    }
+}
+
+
+function validateLinks(allLinksPromise) {
+    Promise.allSettled(arrayPromesa);
+}
+
+
+function getAllLinksPromise(arrayLinks) {
+
+    const validatedLinksArray = arrayLinks.map(links => new Promise((resolve, reject) => {
+        return fetch(links.href)
+          .then(response => {
+            console.log("then",response)
+            if (response.status >= 200 && response.status < 400) {
+              links.status = response.status;
+              links.statusText = response.statusText;
+              resolve(links);
+            } else {
+              links.status = response.status;
+              links.statusText = 'Fail';
+              resolve(links);
+            }
+          }).catch(() => {
+            console.log("catch")
+            links.status = '';
+            links.statusText = 'Not Found';
+            resolve(links);
+          });
+      }));
+
+      return Promise.all(validatedLinksArray);
+    };
+
+  //.........................otra forma...............................................
+    // const arrayPromesa = [];
+    // console.log("ger",arrayLinks);
+    // for (let i = 0; i < arrayLinks.length; i++) {
+    //     const promise = fetch(arrayLinks[i].href).then(console.log).catch(console.log)
+    //     arrayPromesa.push(promise)
+    //     //arrayPromesa.push(fetch(arrayLinks[i].href));
+    // }
+    // console.log(arrayPromesa);
+    // //return Promise.allSettled(arrayPromesa);// retorna una promesa
+    // return Promise.all(arrayPromesa);// retorna una promesa
+//};
+
+
+function mdLinks(route) {
+    const routeAbsolute = route; // evaluar como eliminar esta linea
+    const routeisAbsolute = tipoRutafuncion(route);//retorna un booleando 
+    if (existsSync(route)) {//recibe una ruta que puede ser una string, un búfer o una URL- retorna una booleano si existe la ruta o no
         console.log(" ruta si existe");
         if (routeisAbsolute) {
             console.log(" ruta es absoluta..", routeisAbsolute);
             const routeAbsolute = routeisAbsolute;
         } else {
             console.log(" ruta es relativa.");
-            const routeAbsolute = convertirRutaRelativaAabsoluta('pruebamd.md');
+            const routeAbsolute = convertirRutaRelativaAabsoluta(route);
         }
         const isFileMd = fileExtencion(routeAbsolute);
-        if (isFileMd) { readFile(routeAbsolute) }
-        else { console.log(" no es un archivo MD"); }
+        if (isFileMd) {
+            console.log(" si es un archivo MD")
+            const arrayLinks = readFiles(routeAbsolute);
+            if (arrayLinks !== "") {
+                console.log("arreglo con links")
+                const x= getAllLinksPromise(arrayLinks)
+//..............otra forma.........................................................
+               // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
+              
+                console.log("arreglo con links2")
+            }
+            else {
+                console.log("arreglo sin links")
+            }
+        }
+        else { console.log(" no es un archivo MD, fin"); }
     } else {
-        console.log(" ruta no existe");
+        console.log(" ruta no existe, fin");
     }
 
 
