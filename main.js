@@ -4,6 +4,7 @@ const {
     fileExtencionIsMD,
     readFiles,
     validateLinks,
+    stats,
 } = require("./methods");
 
 
@@ -105,43 +106,50 @@ const httpPetition = (arrObjLinks) => {
 //     //console.log(" leer contendo del archivo",readFileSync(objValidarRuta.rutaAbsoluta, "utf-8"));//leemos el archivo
 // };
 
-const mdlinks = (route) => {
+const mdlinks = (route, options = { validate, stats }) => {
     new Promise((resolve, reject) => {
-        const routeAbsolute = route; // evaluar como eliminar esta linea
+        let routeAbsolute = route; // evaluar como eliminar esta linea
         const routeisAbsolute = rutainicialisAbsoluta(route);//retorna un booleando 
         if (existsSync(route)) {//recibe una ruta que puede ser una string, un búfer o una URL- retorna una booleano si existe la ruta o no
             console.log(" ruta si existe");
             if (routeisAbsolute) {
                 console.log(" ruta es absoluta..", routeisAbsolute);
-                const routeAbsolute = routeisAbsolute;
+                routeAbsolute = routeisAbsolute;
             } else {
                 console.log(" ruta es relativa.");
-                const routeAbsolute = convertirRutaRelativaAabsoluta(route);
+                routeAbsolute = convertirRutaRelativaAabsoluta(route);
             }
             const isFileMd = fileExtencionIsMD(routeAbsolute);
             if (isFileMd) {
                 console.log(" si es un archivo MD")
                 const arrayLinks = readFiles(routeAbsolute);
-                if (arrayLinks !== "") {
-                    validateLinks(arrayLinks)
-                        .then((response) => {
-                            console.log(" response", response);
-                            resolve(response);
-                            // console.log(" fin", arrayLinks);
-                        });
-                    //...............rs....................................
-                    //     console.log("arreglo con links")
-                    //     httpPetition(objectLinks).then((response) => {
-                    //         resolve(response);
-                    //         });
-                    //..............otra forma.........................................................
-                    // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
+                if (options.validate == true) {
+                    if (arrayLinks !== "") {
+                        validateLinks(arrayLinks)
+                            .then((response) => {
+                                // console.log(" validate=true", response);
+                                resolve(response);
+                                console.log(" validate=true", arrayLinks);
+                                if (options.stats == true) {
+                                    stats(arrayLinks);
+                                }
+                            });
+                        //...............rs....................................
+                        //     console.log("arreglo con links")
+                        //     httpPetition(objectLinks).then((response) => {
+                        //         resolve(response);
+                        //         });
+                        //..............otra forma.........................................................
+                        // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
 
-                    console.log("arreglo con links2 dxxx0", arrayLinks)
-                }
-                else {
-                    console.log("arreglo sin links")
-                    //   reject("ARCHIVO SIN LINKS");
+                        //  console.log("validate=true", arrayLinks)
+                    }
+                    else {
+                        console.log("archivo sin links")
+                        //   reject("ARCHIVO SIN LINKS");
+                    }
+                } else {
+                    console.log(" validate=false", arrayLinks);
                 }
             }
             else {
@@ -154,15 +162,5 @@ const mdlinks = (route) => {
         }
         //   console.log(" fin", arrayLinks);
     });
-
 };
-
-
-
-
-mdlinks('./pruebamd.md');
-
-
-// module.exports = {
-//     mdLinks
-// };
+mdlinks('./pruebamd.md', { validate: false, stats: true});

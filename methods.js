@@ -26,7 +26,7 @@ const fileExtencionIsMD = (routeAbsolute1) => {
 }
 
 const readFiles = (routeAbsolute1) => { // funcion para leer archivos
-  console.log("rwad", routeAbsolute1);
+  //console.log("rwad", routeAbsolute1);
   const arrayLinks = [];
   if (routeAbsolute1 !== '') {
     const fileContent = readFileSync(routeAbsolute1, "utf-8");
@@ -36,15 +36,16 @@ const readFiles = (routeAbsolute1) => { // funcion para leer archivos
       arrayRoutesLinks.map((url) => {
         const text = url.slice(1, url.indexOf(']'));
         const href = url.slice(url.indexOf(']') + 2, url.indexOf(')'));
-        const file = __dirname +'\\' +routeAbsolute1;
-        const statusR = '';
-        const ok = '';
+        // const file = __dirname +'\\' +routeAbsolute1;
+        const file = routeAbsolute1;
+        // const statusR = '';
+        // const ok = '';
         const objectLinks = {
           href,
           text,
           file,
-          statusR,
-          ok,
+          // statusR,
+          // ok,
         }
         arrayLinks.push(objectLinks);
       });
@@ -56,17 +57,14 @@ const readFiles = (routeAbsolute1) => { // funcion para leer archivos
 }
 
 const validateLinks = (arrayLinks) => {
-  //console.log("arraylinkss legA",arrayLinks)
+
   const validatedLinksArray = arrayLinks.map(links => new Promise((resolve, reject) => {
     //  const validatedLinksArray = arrayLinks.map(links => {
     fetch(links.href)
       .then(response => {
-        //  console.log("then",response.status)
         if (response.status >= 200 && response.status < 400) {
           links.statusR = response.status;
           links.ok = response.statusText;
-          // console.log("then link", links.statusR,validatedLinksArray )
-
           resolve(links);
         } else {
           links.statusR = response.status;
@@ -76,7 +74,7 @@ const validateLinks = (arrayLinks) => {
       }).catch(() => {
         // console.log("catch")
         links.statusR = '';
-        links.ok = 'Link no encontrado';
+        links.ok = 'Fail';
         resolve(links);
       });
   })
@@ -86,6 +84,16 @@ const validateLinks = (arrayLinks) => {
   return Promise.all(validatedLinksArray);
 };
 
+const stats = (arrayLinks) => {
+  const totalLinks = arrayLinks.length;
+  //const uniqueLinks=[...new Set(arrayLinks.map((link) => link.ok=='OK'))]
+  const uniqueLinks = arrayLinks.filter((link) => link.ok == 'OK')
+  //const bloken=[...new Set(arrayLinks.map((link) => link.ok=='Fail'))]
+  const bloken = arrayLinks.filter((link) => link.ok == 'Fail')
+
+  console.log("Stats: ",`total links :${totalLinks}`,` Unique:${uniqueLinks.length}`,` Broken :${ bloken.length}`);
+};
+
 
 module.exports = {
   rutainicialisAbsoluta,
@@ -93,4 +101,5 @@ module.exports = {
   fileExtencionIsMD,
   readFiles,
   validateLinks,
+  stats,
 };
