@@ -92,8 +92,6 @@ const validateLinks = (arrayLinks) => {
       });
   })
   );
-  //  console.log("all11",Promise.all(validatedLinksArray))
-  //  console.log("alllinkss 222",validatedLinksArray)
   return Promise.all(validatedLinksArray);
 };
 

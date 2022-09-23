@@ -125,59 +125,52 @@ const mdlinks = (route, options = { validate, stats }) => {
 
             if (routeIsDirectory(routeAbsolute)) {
                 //  console.log(" es direcrotiieoisjokk");
-                const arrayLinks1 = readDirectory(routeAbsolute, arrayLinks);
-                console.log(" recursividar array ", arrayLinks1);
+                arrayLinks = readDirectory(routeAbsolute, arrayLinks);
+             //   console.log(" recursividad array ", arrayLinks);
+            }else{   
+            if (fileExtencionIsMD(routeAbsolute)) {
+                console.log(" si es un archivo MD")
+                arrayLinks = readFiles(routeAbsolute);
             }
             else {
-                const isFileMd = fileExtencionIsMD(routeAbsolute);
-                if (isFileMd) {
-                    console.log(" si es un archivo MD")
-                    const arrayLinks = readFiles(routeAbsolute);
-                    if (options.validate == true) {
-                        if (arrayLinks !== "") {
-                            validateLinks(arrayLinks)
-                                .then((response) => {
-                                    // console.log(" validate=true", response);
-                                    resolve(response);
-                                    console.log(" validate=true", arrayLinks);
-                                    if (options.stats == true) {
-                                        stats(arrayLinks);
-                                    }
-                                });
-                            //...............rs....................................
-                            //     console.log("arreglo con links")
-                            //     httpPetition(objectLinks).then((response) => {
-                            //         resolve(response);
-                            //         });
-                            //..............otra forma.........................................................
-                            // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
+                console.log(" no es un archivo MD, fin");
+                // reject("NO ES UN ARCHIVO MD");
+            }
+        }
+            if (options.validate == true) {
+                if (arrayLinks !== "") {
+                    validateLinks(arrayLinks)
+                        .then((response) => {
+                            // console.log(" validate=true", response);
+                            resolve(response);
+                            console.log(" validate=true", arrayLinks);
+                            if (options.stats == true) {
+                                stats(arrayLinks);
+                            }
+                        });
+                    //...............rs....................................
+                    //     console.log("arreglo con links")
+                    //     httpPetition(objectLinks).then((response) => {
+                    //         resolve(response);
+                    //         });
+                    //..............otra forma.........................................................
+                    // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
 
-                            //  console.log("validate=true", arrayLinks)
-                        }
-                        else {
-                            console.log("archivo sin links")
-                            //   reject("ARCHIVO SIN LINKS");
-                        }
-                    } else {
-                        console.log(" validate=false", arrayLinks);
-                    }
+                    //  console.log("validate=true", arrayLinks)
                 }
                 else {
-                    console.log(" no es un archivo MD, fin");
-                    // reject("NO ES UN ARCHIVO MD");
+                    console.log("archivo sin links")
+                    //   reject("ARCHIVO SIN LINKS");
                 }
-
+            } else {
+                console.log(" validate=false", arrayLinks);
             }
-            //    stats.isDirectory()
-
-            //  readDirectory(routeAbsolute);
 
         } else {
             console.log(" ruta no existe, fin");
             // reject("RUTA NO EXISTE");
         }
-        //   console.log(" fin", arrayLinks);
     });
 };
-mdlinks('./pruebas', { validate: false, stats: true });
-//mdlinks('./pruebamd.md', { validate: true, stats: true });
+//mdlinks('./pruebas', { validate: false, stats: true });
+mdlinks('./pruebamd.md', { validate: false, stats: true });
