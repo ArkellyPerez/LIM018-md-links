@@ -1,10 +1,12 @@
-const { existsSync, readFileSync, readFile } = require('fs');
+const { existsSync, statSync, readFileSync, readFile, isDirectory, fstat } = require('fs');
+const fs = require('fs');
 const path = require('path');
+//const stats = require('stats');
 const fetch = require('node-fetch');
 
 const rutainicialisAbsoluta = (route) => {
   const routeisAbsolute = path.isAbsolute(route);
-  console.log(" ruta es absoluta..", routeisAbsolute);
+  // console.log(" ruta es absoluta..", routeisAbsolute);
   return routeisAbsolute;
 }
 
@@ -13,6 +15,17 @@ const convertirRutaRelativaAabsoluta = (ruta) => {
 
   return path.resolve(ruta);
 }
+// revisar stats para reducir lineas de codigo
+const routeIsDirectory = (routeAbsolute) => {
+  const stats = fs.statSync(routeAbsolute)
+
+  const isdirectory = stats.isDirectory(routeAbsolute);
+  //console.log(" funcion isDirectory:ruta es  cdorectorio=", routeAbsolute);
+  return (isdirectory);
+}
+// 
+
+
 const fileExtencionIsMD = (routeAbsolute1) => {
   const extencion = path.extname(routeAbsolute1);
   //  console.log(" extencion..", extencion)
@@ -91,9 +104,32 @@ const stats = (arrayLinks) => {
   //const bloken=[...new Set(arrayLinks.map((link) => link.ok=='Fail'))]
   const bloken = arrayLinks.filter((link) => link.ok == 'Fail')
 
-  console.log("Stats: ",`total links :${totalLinks}`,` Unique:${uniqueLinks.length}`,` Broken :${ bloken.length}`);
+  console.log("Stats: ", `total links :${totalLinks}`, ` Unique:${uniqueLinks.length}`, ` Broken :${bloken.length}`);
 };
+//path.join(__d revisar para usarlo si es posible
+const readDirectory = (routeAbsolute, arrayLinks) => {
+  const subDirectorysAndFiles = fs.readdirSync(routeAbsolute); // devuelve un array 
 
+  subDirectorysAndFiles.forEach(dir => {
+    const SubRouteAbsolute = path.join(routeAbsolute, dir);
+    if (routeIsDirectory(SubRouteAbsolute)) {
+    //  console.log("es un dir sub", SubRouteAbsolute);
+      const DitTemp = readDirectory(SubRouteAbsolute, arrayLinks);
+      DitTemp.forEach(dir2 => {
+        const x = arrayLinks.push(dir2);
+      })
+    }
+    else {
+      console.log("es un archivo sub", SubRouteAbsolute)
+      if (fileExtencionIsMD(SubRouteAbsolute)) {
+        // console.log(" si es un archivo MD")
+        arrayLinks = readFiles(SubRouteAbsolute);
+     //   console.log(" si es un archivo MD", arrayLinks)
+      }
+    }
+  });
+  return arrayLinks;
+};
 
 module.exports = {
   rutainicialisAbsoluta,
@@ -102,4 +138,6 @@ module.exports = {
   readFiles,
   validateLinks,
   stats,
+  routeIsDirectory,
+  readDirectory,
 };

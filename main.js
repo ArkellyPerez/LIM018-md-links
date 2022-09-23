@@ -5,6 +5,8 @@ const {
     readFiles,
     validateLinks,
     stats,
+    routeIsDirectory,
+    readDirectory,
 } = require("./methods");
 
 
@@ -108,54 +110,68 @@ const httpPetition = (arrObjLinks) => {
 
 const mdlinks = (route, options = { validate, stats }) => {
     new Promise((resolve, reject) => {
+        let arrayLinks = [];
         let routeAbsolute = route; // evaluar como eliminar esta linea
         const routeisAbsolute = rutainicialisAbsoluta(route);//retorna un booleando 
         if (existsSync(route)) {//recibe una ruta que puede ser una string, un búfer o una URL- retorna una booleano si existe la ruta o no
             console.log(" ruta si existe");
             if (routeisAbsolute) {
-                console.log(" ruta es absoluta..", routeisAbsolute);
+                console.log(" ruta es absoluta...", routeisAbsolute);
                 routeAbsolute = routeisAbsolute;
             } else {
                 console.log(" ruta es relativa.");
                 routeAbsolute = convertirRutaRelativaAabsoluta(route);
             }
-            const isFileMd = fileExtencionIsMD(routeAbsolute);
-            if (isFileMd) {
-                console.log(" si es un archivo MD")
-                const arrayLinks = readFiles(routeAbsolute);
-                if (options.validate == true) {
-                    if (arrayLinks !== "") {
-                        validateLinks(arrayLinks)
-                            .then((response) => {
-                                // console.log(" validate=true", response);
-                                resolve(response);
-                                console.log(" validate=true", arrayLinks);
-                                if (options.stats == true) {
-                                    stats(arrayLinks);
-                                }
-                            });
-                        //...............rs....................................
-                        //     console.log("arreglo con links")
-                        //     httpPetition(objectLinks).then((response) => {
-                        //         resolve(response);
-                        //         });
-                        //..............otra forma.........................................................
-                        // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
 
-                        //  console.log("validate=true", arrayLinks)
-                    }
-                    else {
-                        console.log("archivo sin links")
-                        //   reject("ARCHIVO SIN LINKS");
-                    }
-                } else {
-                    console.log(" validate=false", arrayLinks);
-                }
+            if (routeIsDirectory(routeAbsolute)) {
+                //  console.log(" es direcrotiieoisjokk");
+                const arrayLinks1 = readDirectory(routeAbsolute, arrayLinks);
+                console.log(" recursividar array ", arrayLinks1);
             }
             else {
-                console.log(" no es un archivo MD, fin");
-                // reject("NO ES UN ARCHIVO MD");
+                const isFileMd = fileExtencionIsMD(routeAbsolute);
+                if (isFileMd) {
+                    console.log(" si es un archivo MD")
+                    const arrayLinks = readFiles(routeAbsolute);
+                    if (options.validate == true) {
+                        if (arrayLinks !== "") {
+                            validateLinks(arrayLinks)
+                                .then((response) => {
+                                    // console.log(" validate=true", response);
+                                    resolve(response);
+                                    console.log(" validate=true", arrayLinks);
+                                    if (options.stats == true) {
+                                        stats(arrayLinks);
+                                    }
+                                });
+                            //...............rs....................................
+                            //     console.log("arreglo con links")
+                            //     httpPetition(objectLinks).then((response) => {
+                            //         resolve(response);
+                            //         });
+                            //..............otra forma.........................................................
+                            // getAllLinksPromise(arrayLinks).then((results) => console.log(results));
+
+                            //  console.log("validate=true", arrayLinks)
+                        }
+                        else {
+                            console.log("archivo sin links")
+                            //   reject("ARCHIVO SIN LINKS");
+                        }
+                    } else {
+                        console.log(" validate=false", arrayLinks);
+                    }
+                }
+                else {
+                    console.log(" no es un archivo MD, fin");
+                    // reject("NO ES UN ARCHIVO MD");
+                }
+
             }
+            //    stats.isDirectory()
+
+            //  readDirectory(routeAbsolute);
+
         } else {
             console.log(" ruta no existe, fin");
             // reject("RUTA NO EXISTE");
@@ -163,4 +179,5 @@ const mdlinks = (route, options = { validate, stats }) => {
         //   console.log(" fin", arrayLinks);
     });
 };
-mdlinks('./pruebamd.md', { validate: false, stats: true});
+mdlinks('./pruebas', { validate: false, stats: true });
+//mdlinks('./pruebamd.md', { validate: true, stats: true });
