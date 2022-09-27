@@ -4,7 +4,6 @@ const path = require('path');
 //const stats = require('stats');
 const fetch = require('node-fetch');
 
-
 const rutainicialisAbsoluta = (route) => {
   const routeisAbsolute = path.isAbsolute(route);
   // console.log(" ruta es absoluta..", routeisAbsolute);
@@ -12,20 +11,14 @@ const rutainicialisAbsoluta = (route) => {
 }
 
 const convertirRutaRelativaAabsoluta = (ruta) => {
-  // console.log(" ruta es  convetida  a absoluta..", path.resolve(ruta));
-
   return path.resolve(ruta);
 }
 // revisar stats para reducir lineas de codigo
 const routeIsDirectory = (routeAbsolute) => {
   const stats = fs.statSync(routeAbsolute)
-
   const isdirectory = stats.isDirectory(routeAbsolute);
-  //console.log(" funcion isDirectory:ruta es  cdorectorio=", routeAbsolute);
   return (isdirectory);
 }
-// 
-
 
 const fileExtencionIsMD = (routeAbsolute1) => {
   const extencion = path.extname(routeAbsolute1);
@@ -35,7 +28,6 @@ const fileExtencionIsMD = (routeAbsolute1) => {
   } else {
     isFileMd = false;
   }
-  //   console.log(" extencion.. final", isFileMd)
   return (isFileMd);
 }
 

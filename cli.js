@@ -56,4 +56,4 @@ if (validate && stats) {
 }
 // //mdlinks('./pruebas', { validate: false });
 // //mdlinks('./pruebamd.md', { validate: false});
-//md-links-ar
+//md-links-ar ./pruebas/file1.md

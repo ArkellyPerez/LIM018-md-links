@@ -217,16 +217,36 @@ describe(' mdlinks', () => {
     expect(typeof  mdlinks).toBe('function');
   });
 
-  // it('DeberÍa retornar un string de archivo no es MD', () => {
-  // return expect( mdlinks(testRouteAboluta2,{ validate: false })).resolves.toContainEqual("No es un archivo MD");
-  //  });
+  it('DeberÍa mensaje indicando que la ruta no existe', () => {
+
+    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueb',{ validate: false })
+    .catch((response) => {
+      expect(response).toEqual("RUTA NO EXISTE, POR FAVOR INGRESAR UNA RUTA VÁLIDA")
+    });
+
+  });
+
+  it('DeberÍa mensaje indicando que en la ruta no existen links en formato .Md', () => {
+
+    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\pruebas\\file1.md',{ validate: true })
+    .catch((response) => {
+      expect(response).toEqual("ARCHIVO NO CONTIENE LINKS")
+    });
+
+  });
+
+
+
+
+
 
   it('DeberÍa retornar un string de archivo no es MD', () => {
 
     mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueba1.txt',{ validate: false })
-    .then((response) => {
+    .catch((response) => {
       expect(response).toEqual("No es un archivo MD")
     });
+
   });
 
 
