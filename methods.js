@@ -1,8 +1,9 @@
-const { existsSync, statSync, readFileSync, readFile, isDirectory, fstat } = require('fs');
+const { readFileSync } = require('fs');
 const fs = require('fs');
 const path = require('path');
 //const stats = require('stats');
 const fetch = require('node-fetch');
+
 
 const rutainicialisAbsoluta = (route) => {
   const routeisAbsolute = path.isAbsolute(route);
@@ -44,35 +45,27 @@ const readFiles = (routeAbsolute1) => { // funcion para leer archivos
   if (routeAbsolute1 !== '') {
     const fileContent = readFileSync(routeAbsolute1, "utf-8");
     const arrayRoutesLinks = fileContent.match(/\[.*\]\(.*\)/g);// guardamos cada link en la constante arrayLinks
-
-    if (routeAbsolute1 !== '') {
+    if (routeAbsolute1 !== '' && arrayRoutesLinks !== null) {
       arrayRoutesLinks.map((url) => {
         const text = url.slice(1, url.indexOf(']'));
         const href = url.slice(url.indexOf(']') + 2, url.indexOf(')'));
         // const file = __dirname +'\\' +routeAbsolute1;
         const file = routeAbsolute1;
-        // const statusR = '';
-        // const ok = '';
         const objectLinks = {
           href,
           text,
           file,
-          // statusR,
-          // ok,
         }
         arrayLinks.push(objectLinks);
       });
 
-      // console.log(arrayLinks);
-      return arrayLinks;
     }
   }
+  return arrayLinks;
 }
 
 const validateLinks = (arrayLinks) => {
-
   const validatedLinksArray = arrayLinks.map(links => new Promise((resolve, reject) => {
-    //  const validatedLinksArray = arrayLinks.map(links => {
     fetch(links.href)
       .then(response => {
         if (response.status >= 200 && response.status < 400) {
@@ -85,7 +78,6 @@ const validateLinks = (arrayLinks) => {
           resolve(links);
         }
       }).catch(() => {
-        // console.log("catch")
         links.statusR = '';
         links.ok = 'Fail';
         resolve(links);
@@ -95,15 +87,25 @@ const validateLinks = (arrayLinks) => {
   return Promise.all(validatedLinksArray);
 };
 
-const stats = (arrayLinks) => {
+const statsTotal = (arrayLinks) => {
   const totalLinks = arrayLinks.length;
-  //const uniqueLinks=[...new Set(arrayLinks.map((link) => link.ok=='OK'))]
-  const uniqueLinks = arrayLinks.filter((link) => link.ok == 'OK')
-  //const bloken=[...new Set(arrayLinks.map((link) => link.ok=='Fail'))]
-  const bloken = arrayLinks.filter((link) => link.ok == 'Fail')
-
-  console.log("Stats: ", `total links :${totalLinks}`, ` Unique:${uniqueLinks.length}`, ` Broken :${bloken.length}`);
+  return totalLinks;
 };
+
+const statsUnique = (arrayLinks) => {
+  const uniqueLinks = [...new Set(arrayLinks.map((link) => link.href))]
+  //const uniqueLinks = arrayLinks.filter((link) => link.ok == 'OK')
+  return uniqueLinks.length;
+};
+
+
+const statsBroken = (arrayLinks) => {
+  const bloken = arrayLinks.filter((link) => link.ok == 'Fail')
+  return bloken.length;
+};
+
+
+
 //path.join(__d revisar para usarlo si es posible
 const readDirectory = (routeAbsolute, arrayLinks) => {
   const subDirectorysAndFiles = fs.readdirSync(routeAbsolute); // devuelve un array 
@@ -111,18 +113,14 @@ const readDirectory = (routeAbsolute, arrayLinks) => {
   subDirectorysAndFiles.forEach(dir => {
     const SubRouteAbsolute = path.join(routeAbsolute, dir);
     if (routeIsDirectory(SubRouteAbsolute)) {
-    //  console.log("es un dir sub", SubRouteAbsolute);
       const DitTemp = readDirectory(SubRouteAbsolute, arrayLinks);
       DitTemp.forEach(dir2 => {
         const x = arrayLinks.push(dir2);
       })
     }
     else {
-      console.log("es un archivo sub", SubRouteAbsolute)
       if (fileExtencionIsMD(SubRouteAbsolute)) {
-        // console.log(" si es un archivo MD")
         arrayLinks = readFiles(SubRouteAbsolute);
-     //   console.log(" si es un archivo MD", arrayLinks)
       }
     }
   });
@@ -135,7 +133,9 @@ module.exports = {
   fileExtencionIsMD,
   readFiles,
   validateLinks,
-  stats,
+  statsBroken,
+  statsTotal,
+  statsUnique,
   routeIsDirectory,
   readDirectory,
 };

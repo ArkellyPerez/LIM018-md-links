@@ -1,6 +1,17 @@
 {
-  "name": "md-links",
-  "version": "0.1.0",
+  "name": "md-links-arkelly",
+  "version": "1.1.0",
+  "description": "md-links",
+    "author":"Arkelly Perez Alayo",
+  "main" : "./cli.js",
+  "bin": {
+    "md-links-ar": "./cli.js"
+  },
+  "repository": { 
+    "type": "git",
+    "url": "https://github.com/ArkellyPerez/LIM018-md-links.git"
+},
+"license": "ISC",
   "engines": {
     "node": ">=16.x"
   },
@@ -8,6 +19,8 @@
     "jest": "^29.0.2"
   },
   "scripts": {
+    "build":"tsc",
+    "start": "node main.js",
     "test": "jest --coverage"
   },
   "dependencies": {

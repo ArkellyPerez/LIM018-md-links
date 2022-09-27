@@ -1,5 +1,11 @@
 # Markdown Links
-sjnkndkd,m
+# README CLI Mdlinks-ar
+ Mdlinks-ar permite buscar los links encontrados en archivos con formato .MD a partir de una ruta dada, esta ruta puede ser un archivo o un directorio.
+
+
+
+
+
 ## Índice
 # INICIANDOANDO
 sjnkndkd,m
