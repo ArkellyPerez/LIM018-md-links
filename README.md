@@ -10,18 +10,18 @@ La forma de instalarlo es con:
   npm i mdlinks-arkellyperez
  
 # ¿Como utilizarlo?
-*  Puedes iniciar con escribiendo "md-links-ar-- help" en el terminal, esta opción te ayudará a entender como utlizarlo y que información puedes obtener.
+*  Puedes iniciar con escribiendo "md-linksar-- help" en el terminal, esta opción te ayudará a entender como utlizarlo y que información puedes obtener.
    + ![Pagina](img/help.JPG)
 
 PATH=./pruebas/file1.md
 
-*  Si corres la opción "md-links-ar ./pruebamd.md"
+*  Si corres la opción "mdlinks-ar ./pruebamd.md"
    + ![Pagina](img/path.JPG)
 
-*  Si corres la opción "md-links-ar ./pruebamd.md --validate"
+*  Si corres la opción "mdlinks-ar ./pruebamd.md --validate"
    + ![Pagina](img/validate.JPG)
 
-*  Si corres la opción "md-links-ar ./pruebamd.md --validate --stats"
+*  Si corres la opción "mdlinks-ar ./pruebamd.md --validate --stats"
    + ![Pagina](img/stats.JPG)
 
 
