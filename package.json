@@ -1,5 +1,5 @@
 {
-  "name": "mdlinks-arkelly",
+  "name": "mdlinks-arkellyperez",
   "version": "1.0.0",
   "description": "md-links permite leer links y mostrar estadísticas a partir de una ruta o archivo dado",
     "author":"Arkelly Perez Alayo",
@@ -22,6 +22,7 @@
     "build":"tsc",
     "start": "node main.js",
     "test": "jest --coverage"
+    
   },
   "dependencies": {
     "node-fetch": "^2.6.7"

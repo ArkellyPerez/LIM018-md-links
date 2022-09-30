@@ -7,7 +7,7 @@
 
  # Instalación
 La forma de instalarlo es con:
- npm i md-links-ar.
+  npm i mdlinks-arkellyperez
  
 # ¿Como utilizarlo?
 *  Puedes iniciar con escribiendo "md-links-ar-- help" en el terminal, esta opción te ayudará a entender como utlizarlo y que información puedes obtener.

@@ -183,7 +183,7 @@ describe('validateLinks', () => {
       statusText: 'OK',
     }
     fetch.mockResolvedValue(objrespta);
-    validateLinks(arrayObjLinks)
+   return validateLinks(arrayObjLinks)
       .then((response) => {
         expect(response).toEqual(arrayObjLinksresultado)
       });
@@ -195,7 +195,7 @@ describe('validateLinks', () => {
       statusText:'Fail',
     }
     fetch.mockResolvedValue(objrespta);
-    validateLinks(arrayObjLinksresultado)
+    return validateLinks(arrayObjLinksresultado)
       .then((response) => {
         expect(response).toEqual(arrayObjLinksresultado)
       });
@@ -219,7 +219,7 @@ describe(' mdlinks', () => {
 
   it('DeberÍa mensaje indicando que la ruta no existe', () => {
 
-    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueb',{ validate: false })
+    return  mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueb',{ validate: false })
     .catch((response) => {
       expect(response).toEqual("RUTA NO EXISTE, POR FAVOR INGRESAR UNA RUTA VÁLIDA")
     });
@@ -228,7 +228,7 @@ describe(' mdlinks', () => {
 
   it('DeberÍa mensaje indicando que en la ruta no existen links en formato .Md', () => {
 
-    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\pruebas\\file1.md',{ validate: true })
+    return  mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\pruebas\\file1.md',{ validate: true })
     .catch((response) => {
       expect(response).toEqual("ARCHIVO NO CONTIENE LINKS")
     });
@@ -242,7 +242,7 @@ describe(' mdlinks', () => {
 
   it('DeberÍa retornar un string de archivo no es MD', () => {
 
-    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueba1.txt',{ validate: false })
+    return  mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\prueba1.txt',{ validate: false })
     .catch((response) => {
       expect(response).toEqual("No es un archivo MD")
     });
@@ -252,7 +252,7 @@ describe(' mdlinks', () => {
 
   it('entrada es un directorio', () => {
 
-    mdlinks(testRouteAbolutaF,{ validate: false })
+    return   mdlinks(testRouteAbolutaF,{ validate: false })
     .then((response) => {
       expect(response).toEqual(arrayResultadosrecursividad)
     });
@@ -261,7 +261,7 @@ describe(' mdlinks', () => {
 
   it('entrada es una ruta absoluta', () => {
 
-    mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\test.md',{ validate: false })
+    return   mdlinks('D:\\ARKELLY\\CAPACITACIONES\\LABORATORIA\\LIMA-18\\LIM018-md-links\\test.md',{ validate: false })
     .then((response) => {
       expect(response).toEqual(arrayObjLinks11)
     });
@@ -270,7 +270,7 @@ describe(' mdlinks', () => {
 
   it('DeberÍa retornar una  array de promesas de link sin validar', () => {
 
-    mdlinks(testRoute,{ validate: false })
+    return   mdlinks(testRoute,{ validate: false })
     .then((response) => {
       expect(response).toEqual(arrayObjLinks11)
     });
@@ -278,7 +278,7 @@ describe(' mdlinks', () => {
 
   it('DeberÍa retornar una  array de promesas de link validados', () => {
 
-    mdlinks(testRoute,{ validate: true })
+    return  mdlinks(testRoute,{ validate: true })
     .then((response) => {
       expect(response).toEqual(arrayObjLinksresultado)
     });
