@@ -1,7 +1,7 @@
 {
   "name": "md-links-arkelly",
   "version": "1.1.0",
-  "description": "md-links",
+  "description": "md-links permite leer links y mostrar estadísticas a partir de una ruta o archivo dado",
     "author":"Arkelly Perez Alayo",
   "main" : "./cli.js",
   "bin": {

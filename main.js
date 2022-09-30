@@ -9,8 +9,6 @@ const {
 } = require("./methods");
 
 const { existsSync, } = require('fs');
-//const fetch = require('node-fetch');
-
 
 const mdlinks = (route, options = { validate }) => {
     return new Promise((resolve, reject) => {

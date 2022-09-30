@@ -14,7 +14,43 @@ const arg = process.argv;
 const route = process.argv[2];
 const validate = arg.includes('--validate');
 const stats = arg.includes('--stats');
+const help = arg.includes('--help');
 
+
+if (help) {
+    console.log(`
+----------------------------------------------------------------------------\n
+                                   HELP                                     \n
+----------------------------------------------------------------------------\n
+Las estructura que debes seguir es la siguiente:  md-links-ar + ruta + options
+    Ejemplos:
+    md-links-ar ./pruebas/file1.md
+    md-links-ar ./pruebas/file1.md --validate
+    md-links-ar ./pruebas/file1.md --validate --stats
+
+La descripción de OPTIONS con respecto a los resultados que puedes obtener es la siguiente:
+
+    ＯＰＴＩＯＮＳ\n
+     --validate 
+        * href: URL encontrada.
+        * text: Texto que aparecía dentro del link.
+        * file: Ruta del archivo donde se encontró el link.
+        * status: Código de respuesta HTTP.
+        * ok: Mensaje fail en caso de fallo u ok en caso de éxito.
+     --stats
+        * Total: total de links encontrados.
+        * Unique: total de links unicos encontrados.
+     --stats --validate
+        * Total: total de links encontrados.
+        * Unique: total de links unicos encontrados.
+        * Broke: total de links rotos.\n
+--------------------------------------------------------------------------------\n
+--------------------------------------------------------------------------------`)
+}
+
+if (route==null) {
+    console.table("Por favor ingresar una ruta");
+}else{ 
 if (!validate && !stats) {
     mdlinks(route, { validate: false })
         .then(links => {
@@ -53,6 +89,7 @@ if (validate && stats) {
             console.log("|----------------------------|");
         })
         .catch(error => console.log(error));
+}
 }
 // //mdlinks('./pruebas', { validate: false });
 // //mdlinks('./pruebamd.md', { validate: false});

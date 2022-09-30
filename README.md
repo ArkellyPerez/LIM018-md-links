@@ -1,9 +1,28 @@
 # Markdown Links
-# README Mdlinks-ar
- Mdlinks-ar permite buscar los links encontrados en archivos con formato .MD a partir de una ruta dada, esta ruta puede ser un archivo o un directorio.
+# Descripción
+ Mdlinks-ar permite buscar los links encontrados en archivos con formato .MD a partir de una ruta dada, esta ruta puede ser un archivo o un directorio.También puedes obtener estadísticas como:
+ * Cantidad de links encontrados.
+ * Cantidad de links únicos encontrados.
+ *Cantidad de links rotos.
 
+ # Instalacíon
+La forma de instalarlo es con:
+ npm i md-links-ar.
+ 
+# ¿Como utilizarlo?
+*  Puedes iniciar con escribiendo "md-links-ar-- help" en el terminal, esta opción te ayudará a entender como utlizarlo y que información puedes obtener.
+   + ![Pagina](img/help.JPG)
 
+PATH=./pruebas/file1.md
 
+*  Si corres la opción "md-links-ar ./pruebamd.md"
+   + ![Pagina](img/path.JPG)
+
+*  Si corres la opción "md-links-ar ./pruebamd.md --validate"
+   + ![Pagina](img/validate.JPG)
+
+*  Si corres la opción "md-links-ar ./pruebamd.md --validate --stats"
+   + ![Pagina](img/stats.JPG)
 
 
 ## 1. Preámbulo

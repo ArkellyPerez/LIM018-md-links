@@ -1,27 +1,26 @@
 const { readFileSync } = require('fs');
 const fs = require('fs');
 const path = require('path');
-//const stats = require('stats');
 const fetch = require('node-fetch');
-
+//--------------Función que devuelve true si la ruta es absoluta y false si es relativa-----
 const rutainicialisAbsoluta = (route) => {
   const routeisAbsolute = path.isAbsolute(route);
-  // console.log(" ruta es absoluta..", routeisAbsolute);
   return routeisAbsolute;
 }
-
+//--------------Función retorna la ruta absoluta-----
 const convertirRutaRelativaAabsoluta = (ruta) => {
   return path.resolve(ruta);
 }
 // revisar stats para reducir lineas de codigo
+//--------------Función retorna true si la ruta es un directorio y false si es un archivo
 const routeIsDirectory = (routeAbsolute) => {
   const stats = fs.statSync(routeAbsolute)
   const isdirectory = stats.isDirectory(routeAbsolute);
   return (isdirectory);
 }
-
-const fileExtencionIsMD = (routeAbsolute1) => {
-  const extencion = path.extname(routeAbsolute1);
+//--------------Función retorna true si la ruta es un archivo.MD y false si no lo es
+const fileExtencionIsMD = (routeAbsolute) => {
+  const extencion = path.extname(routeAbsolute);
   //  console.log(" extencion..", extencion)
   if (extencion == '.md') {
     isFileMd = true;
@@ -30,19 +29,18 @@ const fileExtencionIsMD = (routeAbsolute1) => {
   }
   return (isFileMd);
 }
-
-const readFiles = (routeAbsolute1) => { // funcion para leer archivos
-  //console.log("rwad", routeAbsolute1);
+//----Función que lee archivos MD y retorna un arreglo de objetos, donde se crea un objeto por cada link encontrado
+const readFiles = (routeAbsolute) => {
   const arrayLinks = [];
-  if (routeAbsolute1 !== '') {
-    const fileContent = readFileSync(routeAbsolute1, "utf-8");
+  if (routeAbsolute !== '') {
+    const fileContent = readFileSync(routeAbsolute, "utf-8");
     const arrayRoutesLinks = fileContent.match(/\[.*\]\(.*\)/g);// guardamos cada link en la constante arrayLinks
-    if (routeAbsolute1 !== '' && arrayRoutesLinks !== null) {
+    if (routeAbsolute !== '' && arrayRoutesLinks !== null) {
       arrayRoutesLinks.map((url) => {
         const text = url.slice(1, url.indexOf(']'));
         const href = url.slice(url.indexOf(']') + 2, url.indexOf(')'));
         // const file = __dirname +'\\' +routeAbsolute1;
-        const file = routeAbsolute1;
+        const file = routeAbsolute;
         const objectLinks = {
           href,
           text,
@@ -50,12 +48,11 @@ const readFiles = (routeAbsolute1) => { // funcion para leer archivos
         }
         arrayLinks.push(objectLinks);
       });
-
     }
   }
   return arrayLinks;
 }
-
+//----Función que valida cada link utilizando fetch y retorna una promesa
 const validateLinks = (arrayLinks) => {
   const validatedLinksArray = arrayLinks.map(links => new Promise((resolve, reject) => {
     fetch(links.href)
@@ -96,8 +93,6 @@ const statsBroken = (arrayLinks) => {
   return bloken.length;
 };
 
-
-
 //path.join(__d revisar para usarlo si es posible
 const readDirectory = (routeAbsolute, arrayLinks) => {
   const subDirectorysAndFiles = fs.readdirSync(routeAbsolute); // devuelve un array 
@@ -118,6 +113,7 @@ const readDirectory = (routeAbsolute, arrayLinks) => {
   });
   return arrayLinks;
 };
+
 
 module.exports = {
   rutainicialisAbsoluta,
