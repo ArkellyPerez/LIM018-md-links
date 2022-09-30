@@ -5,7 +5,7 @@
  * Cantidad de links únicos encontrados.
  *Cantidad de links rotos.
 
- # Instalacíon
+ # Instalación
 La forma de instalarlo es con:
  npm i md-links-ar.
  
@@ -41,8 +41,7 @@ Dentro de una comunidad de código abierto, nos han propuesto crear una
 herramienta usando [Node.js](https://nodejs.org/), que lea y analice archivos
 en formato `Markdown`, para verificar los links que contengan y reportar
 algunas estadísticas.
-A continuación mostramos un ejemplo:
- + ![Pagina](img/resultado.JPG)
+
 
 ## 2. Resumen del proyecto
 
